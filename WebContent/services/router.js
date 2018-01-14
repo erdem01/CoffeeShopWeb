@@ -22,7 +22,8 @@
 			, redirectToOrder: redirectToOrder
 		};
 	}]);
-	routerModule.config(['$routeProvider', 'loginPath', 'helloPath', 'orderPath', function($routeProvider, loginPath, helloPath, orderPath) {
+	var routeChangeModule = angular.module('RouteChangeModule', ['ngRoute', 'AuthenticationModule', 'RouterModule']);
+	routeChangeModule.config(['$routeProvider', 'loginPath', 'helloPath', 'orderPath', function($routeProvider, loginPath, helloPath, orderPath) {
 		$routeProvider
 		
         .when(helloPath, {
@@ -45,10 +46,9 @@
 
         .otherwise({ redirectTo: orderPath });
 	}]);
-	routerModule.config(['$httpProvider', function($httpProvider) {
+	routeChangeModule.config(['$httpProvider', function($httpProvider) {
 		$httpProvider.interceptors.push('AuthInterceptor');
 	}]);
-	var routeChangeModule = angular.module('RouteChangeModule', ['ngRoute', 'AuthenticationModule', 'RouterModule']);
 	routeChangeModule.run(['$rootScope', 'AuthenticationHolderService', 'RouteService', function($rootScope, AuthenticationHolderService, RouteService) {
 		$rootScope.$on("$routeChangeStart",function(event, next, current){
 	        if(!AuthenticationHolderService.isLoggedIn()){
